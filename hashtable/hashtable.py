@@ -100,7 +100,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        self.storage[index] = None
 
     def get(self, key):
         """
