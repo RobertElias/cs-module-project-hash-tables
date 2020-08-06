@@ -112,7 +112,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        return self.storage[index]
 
     def resize(self, new_capacity):
         """
