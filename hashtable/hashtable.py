@@ -147,13 +147,12 @@ class HashTable:
             self.table[self.hash_index(
                 key)] = LinkedList(entry)
         else:
-            cur = slot
-            while cur.next is not None:
-                cur = cur.next
-            cur.next = entry
-
+            slot.insert(entry)
+        # print({slot}, self.table)
         if self.get_load_factor() > 0.7:
-            pass
+            print(
+                f"{key} LF: {self.get_load_factor()}")
+            self.resize(self.capacity*2)
 
     def delete(self, key):
         """
