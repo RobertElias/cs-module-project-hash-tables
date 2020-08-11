@@ -196,6 +196,24 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        if new_capacity < MIN_CAPACITY:
+            new_capacity = MIN_CAPACITY
+        self.capacity = new_capacity
+        new_table = [None for _ in range(self.capacity)]
+        self.count = 0
+        for i in range(len(self.table)):
+            if self.table[i] is not None:
+                cur = self.table[i].head
+                while cur is not None:
+                    slot = new_table[self.hash_index(cur.key)]
+                    self.count += 1
+                    if slot is None:
+                        new_table[self.hash_index(cur.key)] = LinkedList(cur)
+                        cur = cur.next
+                    else:
+                        slot.insert(cur)
+                        cur = cur.next
+        self.table = new_table
 
 
 
