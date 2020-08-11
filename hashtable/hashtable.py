@@ -163,11 +163,16 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        self.count -= 1
+        if slot and slot.contains(key) is not False:
+            print(self.table)
+            self.count -= 1
+            slot.remove(key)
+        else:
+            return False
 
         if self.get_load_factor() < 0.2:
-            
-            print("resize")
+            print(f"{key} LF: {self.get_load_factor()}")
+            self.resize(int(self.capacity/2))
 
     def get(self, key):
         """
