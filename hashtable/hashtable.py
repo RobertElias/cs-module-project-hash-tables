@@ -183,8 +183,10 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        index = self.hash_index(key)
-        return self.storage[index]
+        slot = self.table[self.hash_index(key)]
+        if slot and slot.contains(key) is not False:
+            return slot.contains(key)
+        return None
 
     def resize(self, new_capacity):
         """
