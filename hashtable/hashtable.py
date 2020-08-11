@@ -5,7 +5,8 @@ class LinkedList:
     
     def __repr__(self):
         return f'{repr(self.head)}'
-
+        
+    # this will insert node to tail
     def add_to_tail(self, HashTableEntry):
         new_entry = HashTableEntry
         if self.head is None:
