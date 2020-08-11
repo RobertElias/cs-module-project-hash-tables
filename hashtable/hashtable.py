@@ -2,6 +2,9 @@ class LinkedList:
     def __init__(self, HashTableEntry=None):
         self.head = HashTableEntry
         self.tail = HashTableEntry
+    
+    def __repr__(self):
+        return f'{repr(self.head)}'
 
     def add_to_tail(self, HashTableEntry):
         new_entry = HashTableEntry
