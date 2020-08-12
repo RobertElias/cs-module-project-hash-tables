@@ -1,5 +1,4 @@
-# importing linked list
-from linkedlist import LinkedList
+# from linkedlist import LinkedList
 class HashTableEntry:
     """
     Linked List hash table key/value pair
@@ -94,18 +93,33 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        slot, entry = self.table[self.hash_index(
-            key)], HashTableEntry(key, value)
-        self.count += 1
-        if slot is None:
-            self.table[self.hash_index(
-                key)] = LinkedList(entry)
-        else:
-            slot.insert(entry)
+        index = self.hash_index(key)
+        cur = self.table[index]
+
+        while cur is not None and cur.key != key:
+            cur = cur.next
+
+        if cur is not None:
+            cur.value = value
+        
+        else: 
+            new_entry = HashTableEntry(key, value)
+            new_entry.next = self.table[index]
+            self.table[index] = new_entry
+
+        # slot, entry = self.table[self.hash_index(
+        #     key)], HashTableEntry(key, value)
+        # self.count += 1
+        # if slot is None:
+        #     self.table[self.hash_index(
+        #         key)] = LinkedList(entry)
+        # else:
+        #     slot.insert(entry)
         # print({slot}, self.table)
+        self.count += 1
         if self.get_load_factor() > 0.7:
-            print(
-                f"{key} LF: {self.get_load_factor()}")
+            # print(
+                # f"{key} LF: {self.get_load_factor()}")
             self.resize(self.capacity*2)
 
     def delete(self, key):
@@ -117,16 +131,32 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        if slot and slot.contains(key) is not False:
-            print(self.table)
-            self.count -= 1
-            slot.remove(key)
-        else:
-            return False
 
-        if self.get_load_factor() < 0.2:
-            print(f"{key} LF: {self.get_load_factor()}")
-            self.resize(int(self.capacity/2))
+        index = self.hash_index(key)
+        cur = self.table[index]
+        last_entry = None
+
+        while cur is not None and cur.key != key:
+            last_entry = cur
+            cur = last_entry.next 
+        
+        if cur is None:
+            print('key not found')
+        else:
+            if last_entry is None:
+                self.table[index] = cur.next
+
+        self.count -= 1
+        # if slot and slot.contains(key) is not False:
+        #     print(self.table)
+        #     self.count -= 1
+        #     slot.remove(key)
+        # else:
+        #     return False
+
+        # if self.get_load_factor() < 0.2:
+        #     # print(f"{key} LF: {self.get_load_factor()}")
+        #     self.resize(int(self.capacity/2))
 
     def get(self, key):
         """
@@ -137,10 +167,20 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        slot = self.table[self.hash_index(key)]
-        if slot and slot.contains(key) is not False:
-            return slot.contains(key)
-        return None
+
+        index = self.hash_index(key)
+        cur = self.table[index]
+
+        while cur is not None:
+
+            if (cur.key == key):
+                return cur.value
+            cur = cur.next
+
+        # slot = self.table[self.hash_index(key)]
+        # if slot and slot.contains(key) is not False:
+        #     return slot.value
+        # return None
 
     def resize(self, new_capacity):
         """
@@ -150,24 +190,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # index = self.hash_index(key)
+        # cur = self.table[index]
         if new_capacity < MIN_CAPACITY:
             new_capacity = MIN_CAPACITY
+        
+        old_table = self.table
+
         self.capacity = new_capacity
-        new_table = [None for _ in range(self.capacity)]
-        self.count = 0
-        for i in range(len(self.table)):
-            if self.table[i] is not None:
-                cur = self.table[i].head
+        self.table = [None] * self.capacity
+        
+        for item in old_table:
+            if item is not None:
+                cur = item
                 while cur is not None:
-                    slot = new_table[self.hash_index(cur.key)]
-                    self.count += 1
-                    if slot is None:
-                        new_table[self.hash_index(cur.key)] = LinkedList(cur)
-                        cur = cur.next
-                    else:
-                        slot.insert(cur)
-                        cur = cur.next
-        self.table = new_table
+                    self.put(cur.key, cur.value)
+                    cur = cur.next
 
 
 
@@ -198,7 +236,7 @@ if __name__ == "__main__":
     ht.resize(ht.capacity * 2)
     new_capacity = ht.get_num_slots()
 
-    print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+    # print(f"\nResized from {old_capacity} to {new_capacity}.\n")
     print(ht.table)
     # Test if data intact after resizing
     for i in range(1, 13):
